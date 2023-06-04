@@ -1,21 +1,24 @@
 import React from 'react';
-import { Box, Flex, Text } from '@chakra-ui/react';
+import { Box, Flex, Button } from '@chakra-ui/react';
 import Link from 'next/link';
 
-const Layout = ({ children }) => {
+const Navigation = () => {
     return (
         <Box p={4}>
             <Flex mb={4}>
                 <Link href="/" passHref>
-                    <Text mr={4}>Home</Text>
+                    <Button mr={5}>
+                        Home
+                    </Button>
                 </Link>
                 <Link href="/recipes" passHref>
-                    <Text>Recipes</Text>
+                    <Button>
+                        Our Recipes
+                    </Button>
                 </Link>
             </Flex>
-            {children}
         </Box>
     );
 };
 
-export default Layout;
+export default Navigation;

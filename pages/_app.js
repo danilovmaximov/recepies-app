@@ -1,6 +1,5 @@
 import {ChakraProvider} from '@chakra-ui/react';
 import Head from 'next/head';
-import {DevSupport} from "@react-buddy/ide-toolbox-next";
 
 function MyApp({Component, pageProps}) {
     return (
