@@ -12,8 +12,13 @@ const Navigation = () => {
                     </Button>
                 </Link>
                 <Link href="/recipes" passHref>
-                    <Button>
+                    <Button mr={5}>
                         Our Recipes
+                    </Button>
+                </Link>
+                <Link href="/create-recipe" passHref>
+                    <Button>
+                        Create Recipe
                     </Button>
                 </Link>
             </Flex>

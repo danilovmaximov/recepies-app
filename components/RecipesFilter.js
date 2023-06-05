@@ -34,7 +34,7 @@ const RecipesFilter = ({onFilterChange}) => {
                 <InputLeftElement pointerEvents="none">
                     <SearchIcon color="gray.300" />
                 </InputLeftElement>
-                <Input type='search' placeholder="Search Ingredients" onChange={(e) => onFilterChange('ingredient', e.target.value)} />
+                <Input type='search' placeholder="Search Ingredients (e.g. tomato)" onChange={(e) => onFilterChange('ingredient', e.target.value)} />
             </InputGroup>
         </Stack>
     );
