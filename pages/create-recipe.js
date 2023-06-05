@@ -15,7 +15,7 @@ import {
     VStack,
     HStack,
     useToast,
-    Select, Center, Spinner,
+    Select, Center, Spinner, Flex, Grid,
 } from '@chakra-ui/react';
 import { useDropzone } from 'react-dropzone';
 import SiteWrapper from '@/components/SiteWrapper';
@@ -172,8 +172,8 @@ const CreateRecipe = () => {
                         <FormLabel>Title</FormLabel>
                         <Input name="title" onChange={formik.handleChange} value={formik.values.title} />
                     </FormControl>
-                    <HStack justify="space-between" mb={5}>
-                        <FormControl mr={3}>
+                    <Grid templateColumns={{ base: "1fr", md: "repeat(3, 1fr)" }} gap={6} mb={5}>
+                        <FormControl>
                             <FormLabel>Servings</FormLabel>
                             <Input
                                 name="servings"
@@ -182,7 +182,7 @@ const CreateRecipe = () => {
                                 value={formik.values.servings}
                             />
                         </FormControl>
-                        <FormControl mr={3}>
+                        <FormControl>
                             <FormLabel>Time to cook (in minutes)</FormLabel>
                             <Input
                                 name="readyInMinutes"
@@ -200,9 +200,10 @@ const CreateRecipe = () => {
                                 value={formik.values.healthScore}
                             />
                         </FormControl>
-                    </HStack>
-                    <HStack justify='space-between'>
-                        <FormControl mb={5}>
+                    </Grid>
+
+                    <Grid templateColumns={{ base: "1fr", md: "repeat(2, 1fr)" }} gap={6} mb={5}>
+                        <FormControl>
                             <FormLabel>Cuisine</FormLabel>
                             <Select
                                 name="cuisine"
@@ -217,7 +218,7 @@ const CreateRecipe = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                        <FormControl mb={5}>
+                        <FormControl>
                             <FormLabel>Diet</FormLabel>
                             <Select
                                 name="diet"
@@ -232,8 +233,7 @@ const CreateRecipe = () => {
                                 ))}
                             </Select>
                         </FormControl>
-                    </HStack>
-
+                    </Grid>
                     <FormControl mb={5}>
                         <FormLabel>Ingredients</FormLabel>
                         <Textarea
