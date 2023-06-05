@@ -11,14 +11,19 @@ const Navigation = () => {
                         Home
                     </Button>
                 </Link>
+                <Link href="/create-recipe" passHref>
+                    <Button mr={5}>
+                        Create Recipe
+                    </Button>
+                </Link>
                 <Link href="/recipes" passHref>
                     <Button mr={5}>
                         Our Recipes
                     </Button>
                 </Link>
-                <Link href="/create-recipe" passHref>
+                <Link href="/community-recipes" passHref>
                     <Button>
-                        Create Recipe
+                        Community Recipes
                     </Button>
                 </Link>
             </Flex>

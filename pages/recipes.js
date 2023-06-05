@@ -1,5 +1,16 @@
 import React, { useEffect, useState } from 'react';
-import {Heading, Spacer, Grid, useToast, InputLeftElement, Input, InputGroup, Flex, Button} from '@chakra-ui/react';
+import {
+    Heading,
+    Spacer,
+    Grid,
+    useToast,
+    InputLeftElement,
+    Input,
+    InputGroup,
+    Flex,
+    Button,
+    Center, Spinner
+} from '@chakra-ui/react';
 import { fetchRecipes } from './api/api';
 import SiteWrapper from '@/components/SiteWrapper';
 import RecipeCard from '@/components/RecipeCard';
@@ -9,6 +20,7 @@ import {SearchIcon} from "@chakra-ui/icons";
 const Recipes = () => {
     const [recipes, setRecipes] = useState([]);
     const [searchQuery, setSearchQuery] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
     const [diet, setDiet] = useState('');
     const [cuisine, setCuisine] = useState('');
     const [ingredients, setIngredients] = useState('');
@@ -45,8 +57,10 @@ const Recipes = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                setIsLoading(true);
                 const data = await fetchRecipes(searchQuery, diet, cuisine, ingredients, 4, page);
                 setRecipes(data);
+                setIsLoading(false);
                 setHasNextPage(data.length === 4)
             } catch (error) {
                 console.error('Error fetching recipes:', error);
@@ -63,6 +77,16 @@ const Recipes = () => {
         fetchData();
     }, [searchQuery, diet, cuisine, ingredients, page, toast]);
 
+    if (isLoading) {
+        return (
+            <SiteWrapper>
+                <Center h="100vh">
+                    <Spinner size="xl"/>
+                </Center>
+            </SiteWrapper>
+        );
+    }
+
     return (
         <SiteWrapper>
             <Spacer height={75}/>
@@ -78,7 +102,7 @@ const Recipes = () => {
             <RecipesFilter onFilterChange={onFilterChange} />
             <Grid templateColumns={['repeat(1, 1fr)', 'repeat(2, 1fr)', 'repeat(3, 1fr)', 'repeat(4, 1fr)']} gap={4} mt={10}>
                 {recipes.map((recipe) => (
-                    <RecipeCard key={recipe.id} recipe={recipe} />
+                    <RecipeCard key={recipe.id} recipe={recipe} isCommunityRecipe={false} />
                 ))}
             </Grid>
             <Flex justifyContent="center" mt={8}>

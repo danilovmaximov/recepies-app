@@ -1,18 +1,53 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { fetchRecipeDetails } from '../api/api';
-import {Flex, Heading, HStack, Image, List, ListItem, OrderedList, Spacer, Text, UnorderedList} from '@chakra-ui/react';
+import {
+    Box,
+    Center,
+    Flex,
+    Heading,
+    HStack,
+    Image,
+    ListItem,
+    OrderedList,
+    Spacer, Spinner,
+    Text,
+    UnorderedList
+} from '@chakra-ui/react';
 import SiteWrapper from '@/components/SiteWrapper';
+import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
+import {db} from "@/lib/firebase";
 
 const RecipeDetailsPage = () => {
     const router = useRouter();
-    const recipeId = router.query.id;
+    const { id: recipeId, communityRecipe } = router.query;
     const [recipeDetails, setRecipeDetails] = useState(null);
 
     useEffect(() => {
         const fetchDetails = async () => {
             try {
-                const details = await fetchRecipeDetails(recipeId);
+                let details;
+
+                if (communityRecipe) {
+                    const recipeDocRef = doc(db, 'recipes', recipeId);
+                    const recipeDocSnap = await getDoc(recipeDocRef);
+                    if (recipeDocSnap.exists()) {
+                        details = recipeDocSnap.data();
+
+                        const imageCollectionRef = collection(db, 'images');
+                        const imageQuery = query(imageCollectionRef, where('recipeId', '==', recipeId));
+                        const imageQuerySnapshot = await getDocs(imageQuery);
+
+                        if (!imageQuerySnapshot.empty) {
+                            const imageDocSnap = imageQuerySnapshot.docs[0];
+                            const imageData = imageDocSnap.data();
+                            details.image = imageData.file;
+                        }
+                    }
+                } else {
+                    details = await fetchRecipeDetails(recipeId);
+                }
+
                 setRecipeDetails(details);
             } catch (error) {
                 console.error('Error fetching recipe details:', error);
@@ -22,24 +57,19 @@ const RecipeDetailsPage = () => {
         if (recipeId) {
             fetchDetails();
         }
-    }, [recipeId]);
+    }, [recipeId, communityRecipe]);
 
     if (!recipeDetails) {
         return (
             <SiteWrapper>
-                <Flex
-                    height="100vh"
-                    justifyContent="center"
-                    alignItems="center"
-                >
-                    <Heading size="2xl" textAlign="center">
-                        Loading...
-                    </Heading>
-                </Flex>
+                <Center h="100vh">
+                    <Spinner size="xl"/>
+                </Center>
             </SiteWrapper>
         );
     }
 
+    console.log(recipeDetails);
 
     return (
         <SiteWrapper>
@@ -73,37 +103,34 @@ const RecipeDetailsPage = () => {
                 </Flex>
             </HStack>
 
-            <HStack justify='space-between' alignItems='top'>
-                <Flex flexDirection='column'>
-                    <Heading size="xl" mt={8} mb={5}>
-                        Ingredients
-                    </Heading>
-                    <UnorderedList pl={4} styleType="disc">
-                        {recipeDetails.extendedIngredients.map((ingredient) => (
-                            <ListItem key={ingredient.id}>
-                                <Text fontSize='lg'>{ingredient.original}</Text>
-                            </ListItem>
-                        ))}
-                    </UnorderedList>
-                </Flex>
-                <Image src={recipeDetails.image} mt={8} alt="Recipe Image" />
-            </HStack>
+            <Flex flexDirection='column'>
+                <Image src={recipeDetails.image} mt={8} alt="Recipe Image" objectFit='cover' />
+                <Heading size="xl" mt={8} mb={5}>
+                    Ingredients
+                </Heading>
+                <UnorderedList pl={4} styleType="disc">
+                    {recipeDetails.extendedIngredients.map((ingredient) => (
+                        <ListItem key={ingredient.id}>
+                            <Text fontSize='lg'>{ingredient.original}</Text>
+                        </ListItem>
+                    ))}
+                </UnorderedList>
+                {recipeDetails.analyzedInstructions.length > 0 && (
+                    <>
+                        <Heading size="xl" mt={8} mb={5}>
+                            Instructions
+                        </Heading>
+                        <OrderedList pl={4}>
+                            {recipeDetails.analyzedInstructions[0].steps.map((step) => (
+                                <ListItem key={step.number}>
+                                    <Text fontSize='lg'>{step.step}</Text>
+                                </ListItem>
+                            ))}
+                        </OrderedList>
+                    </>
+                )}
+            </Flex>
 
-            <Spacer height={50}/>
-            {recipeDetails.analyzedInstructions.length > 0 && (
-                <>
-                    <Heading size="xl" mt={8} mb={5}>
-                        Instructions
-                    </Heading>
-                    <OrderedList pl={4}>
-                        {recipeDetails.analyzedInstructions[0].steps.map((step) => (
-                            <ListItem key={step.number}>
-                                <Text fontSize='lg'>{step.step}</Text>
-                            </ListItem>
-                        ))}
-                    </OrderedList>
-                </>
-            )}
         </SiteWrapper>
     );
 };

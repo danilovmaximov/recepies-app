@@ -7,6 +7,8 @@ const Home = () => {
     return (
         <SiteWrapper ml={10}>
             <Spacer height={75}/>
+            <video autoPlay loop muted src="/intro-video.mp4" style={{ width: '100%' }} />
+            <Spacer height={75}/>
             <Heading as="h1" size="3xl" mb={4} ml={10}>
                 Welcome!
             </Heading>
