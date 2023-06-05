@@ -85,7 +85,7 @@ const CommunityRecipes = () => {
                 }
 
 
-                q = query(q, limit(4), orderBy('title'), startAfter((page - 1) * 4));
+                q = query(q, limit(12), orderBy('title'), startAfter((page - 1) * 12));
 
                 const querySnapshot = await getDocs(q);
                 const data = [];
@@ -109,7 +109,7 @@ const CommunityRecipes = () => {
 
                 setRecipes(data);
                 setIsLoading(false);
-                setHasNextPage(data.length === 4);
+                setHasNextPage(data.length === 12);
             } catch (error) {
                 console.error('Error fetching recipes:', error);
                 toast({

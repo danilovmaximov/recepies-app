@@ -58,10 +58,10 @@ const Recipes = () => {
         const fetchData = async () => {
             try {
                 setIsLoading(true);
-                const data = await fetchRecipes(searchQuery, diet, cuisine, ingredients, 4, page);
+                const data = await fetchRecipes(searchQuery, diet, cuisine, ingredients, 12, page);
                 setRecipes(data);
                 setIsLoading(false);
-                setHasNextPage(data.length === 4)
+                setHasNextPage(data.length === 12)
             } catch (error) {
                 console.error('Error fetching recipes:', error);
                 toast({
