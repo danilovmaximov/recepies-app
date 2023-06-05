@@ -4,7 +4,7 @@ import { fetchRecipeDetails } from '../api/api';
 import {
     Box,
     Center,
-    Flex,
+    Flex, Grid,
     Heading,
     HStack,
     Image,
@@ -12,7 +12,7 @@ import {
     OrderedList,
     Spacer, Spinner,
     Text,
-    UnorderedList
+    UnorderedList, Wrap, WrapItem
 } from '@chakra-ui/react';
 import SiteWrapper from '@/components/SiteWrapper';
 import {collection, doc, getDoc, getDocs, query, where} from "firebase/firestore";
@@ -76,32 +76,26 @@ const RecipeDetailsPage = () => {
             <Spacer height={75} />
             <Heading size="2xl">{recipeDetails.title}</Heading>
 
-            <HStack justify="space-between" mt={10}>
-                <Flex alignItems="center">
-                    <Text fontSize="lg" fontWeight="bold">
-                        Servings:
-                    </Text>
-                    <Text fontSize="lg" ml={2}>
-                        {recipeDetails.servings}
-                    </Text>
-                </Flex>
-                <Flex alignItems="center">
-                    <Text fontSize="lg" fontWeight="bold">
-                        Ready in Minutes:
-                    </Text>
-                    <Text fontSize="lg" ml={2}>
-                        {recipeDetails.readyInMinutes}
-                    </Text>
-                </Flex>
-                <Flex alignItems="center">
-                    <Text fontSize="lg" fontWeight="bold">
-                        Health Score:
-                    </Text>
-                    <Text fontSize="lg" ml={2}>
-                        {recipeDetails.healthScore}
-                    </Text>
-                </Flex>
-            </HStack>
+            <Wrap spacing={6} mt={10} justify="space-between">
+                <WrapItem>
+                    <Flex align="center">
+                        <Text fontSize="lg" fontWeight="bold">Servings:</Text>
+                        <Text fontSize="lg" ml={2}>{recipeDetails.servings}</Text>
+                    </Flex>
+                </WrapItem>
+                <WrapItem>
+                    <Flex align="center">
+                        <Text fontSize="lg" fontWeight="bold">Ready in Minutes:</Text>
+                        <Text fontSize="lg" ml={2}>{recipeDetails.readyInMinutes}</Text>
+                    </Flex>
+                </WrapItem>
+                <WrapItem>
+                    <Flex align="center">
+                        <Text fontSize="lg" fontWeight="bold">Health Score:</Text>
+                        <Text fontSize="lg" ml={2}>{recipeDetails.healthScore}</Text>
+                    </Flex>
+                </WrapItem>
+            </Wrap>
 
             <Flex flexDirection='column'>
                 <Image src={recipeDetails.image} mt={8} alt="Recipe Image" objectFit='cover' />
